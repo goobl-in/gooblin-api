@@ -1,14 +1,28 @@
+const repository = require('./repository')
 const express = require('express')
+
 const app = express()
 const port = 2112
 
 
-app.get('/api', (req, res) => {
-  res.send('Hello World!')
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+
+app.get('/api/tickets', (req, res) => {
+  res.send(repository.tickets())
 })
 
-app.get('/api/item/create', (req, res) => {
-  res.send('Item created!')
+app.put('/api/ticket/create', (req, res) => {
+  
+  const ticket = req.body
+
+  if (Object.keys(ticket).length == 2) {
+    repository.create(ticket)
+    res.sendStatus(200)
+  } else {
+    res.sendStatus(400)
+  }
 })
 
 app.listen(port, () => {
