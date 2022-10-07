@@ -1,16 +1,24 @@
 
 let nextId = 0
-const ticketsDB = []
+const tickets = []
 
-function tickets() {
-    return ticketsDB
+function getTickets() {
+    return tickets
 }
 
-function create(ticket) {
+function createTicket(ticket) {
     ticket.id = nextId
     ticket.status = "open"
     nextId = nextId +1
-    ticketsDB.push(ticket)
+    tickets.push(ticket)
 }
 
-module.exports = {tickets, create}
+function getTicket(id) {
+    return tickets.filter(e => e.id == id)[0]
+}
+
+function deleteTicket(id) {
+    tickets = tickets.filter(e => e.id != id)
+}
+
+module.exports = {getTickets, createTicket, getTicket, deleteTicket}
