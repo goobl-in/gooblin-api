@@ -2,8 +2,17 @@
 let nextId = 0
 const tickets = []
 
-function getTickets() {
-    return tickets
+function getTickets(query) {
+    if (query === undefined) {
+        return tickets  
+    } else {
+        query = query.toLowerCase()
+        return tickets.filter(ticket => {
+            let foundTitle = ticket.title.toLowerCase().includes(query)
+            let foundDescription = ticket.description.toLowerCase().includes(query)
+            return foundTitle || foundDescription
+        })
+    }
 }
 
 function createTicket(ticket) {

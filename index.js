@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
 })
 
 app.get('/api/tickets', (req, res) => {
-  res.send(repository.getTickets())
+  res.send(repository.getTickets(req.query.q))
 })
 
 app.get('/api/ticket/:id(\\d+)', (req, res) => {
@@ -54,20 +54,8 @@ app.put('/api/ticket', (req, res) => {
   }
 })
 
-repository.createTicket({
-  title: "t1",
-  description: "d3"
-})
-
-repository.createTicket({
-  title: "t2",
-  description: "d3"
-})
-
-repository.createTicket({
-  title: "t3",
-  description: "d3"
-})
+const loadFakeData = require("./load-testdata")
+loadFakeData()
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
