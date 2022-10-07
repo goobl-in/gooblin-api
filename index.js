@@ -54,6 +54,13 @@ app.put('/api/ticket', (req, res) => {
   }
 })
 
+
+// # Logging in
+const passport = require('passport')
+const facebook = require('./facebook')
+facebook()
+app.get('/login/facebook', passport.authenticate('facebook'))
+
 const loadFakeData = require("./load-testdata")
 loadFakeData()
 
