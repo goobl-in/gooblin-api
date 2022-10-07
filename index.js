@@ -4,6 +4,7 @@ const express = require('express')
 const app = express()
 const port = 2112
 
+app.set('json spaces', 2)
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}))
@@ -27,10 +28,18 @@ app.get('/api/ticket/:id(\\d+)', (req, res) => {
 
 app.delete('/api/ticket/:id(\\d+)', (req, res) => {
   repository.deleteTicket(req.params.id)
+  res.sendStatus(204)
 })
 
 app.post('/api/ticket/:id(\\d+)', (req, res) => {
+  const ticket = req.body
 
+  if (Object.keys(ticket).length == 2) {
+    repository.updateTicket(req.params.id, ticket)
+    res.sendStatus(200)
+  } else {
+    res.sendStatus(400)
+  }
 })
 
 app.put('/api/ticket', (req, res) => {
