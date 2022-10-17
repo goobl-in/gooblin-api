@@ -10,6 +10,8 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
+// app.use(passport.authenticate('session'))
+
 app.use('/', express.static('webroot'))
 
 app.use(function(req, res, next) {
@@ -60,6 +62,20 @@ const facebook = require('./facebook')
 facebook()
 app.get('/login/facebook', passport.authenticate('facebook'))
 
+app.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
+  successReturnToOrRedirect: '/',
+  failureRedirect: '/login'
+}))
+
+app.post('/logout', function(req, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err) }
+    res.redirect('/')
+  })
+})
+
+
+// # to remove
 const loadFakeData = require("./load-testdata")
 loadFakeData()
 

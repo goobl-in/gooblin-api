@@ -36,4 +36,23 @@ function deleteTicket(id) {
     tickets = tickets.filter(e => e.id != id)
 }
 
-module.exports = {getTickets, createTicket, getTicket, deleteTicket, updateTicket}
+const users = []
+let nextUserId = 0
+
+function createUserFromFacebook(facebookId) {
+    let user = {id: nextUserId, facebookId: facebookId}
+    users.push(user)
+    nextUserId = nextUserId + 1
+    return user
+}
+
+function getUserFromFacebook(facebookId) {
+    let foundUsers = users.filter(u => u.facebookId)
+    if (foundUsers.length > 0) {
+        return foundUsers[0]
+    } else {
+        return null
+    }
+}
+
+module.exports = {getTickets, createTicket, getTicket, deleteTicket, updateTicket, createUserFromFacebook, getUserFromFacebook}

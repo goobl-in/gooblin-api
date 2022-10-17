@@ -5,54 +5,40 @@ var FacebookStrategy = require('passport-facebook')
 const facebookAppId = "403390698484542"
 const facebookAppSecret = "1f60151cc92cfaf04d6358fa56380e40"
 
+const repository = require('./repository')
+
 function enableFacebook() {
     passport.use(new FacebookStrategy({
         clientID: facebookAppId,
         clientSecret: facebookAppSecret,
-        callbackURL: 'https://goobl.in/'
+        callbackURL: 'https://goobl.in/oauth2/redirect/facebook'
     },
     function(accessToken, refreshToken, profile, cb) {
-    /*    db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
-        'https://www.facebook.com',
-        profile.id
-        ], function(err, cred) {
-        if (err) { return cb(err); }
-        if (!cred) {
-            // The Facebook account has not logged in to this app before.  Create a
-            // new user record and link it to the Facebook account.
-            db.run('INSERT INTO users (name) VALUES (?)', [
-            profile.displayName
-            ], function(err) {
-            if (err) { return cb(err); }
-
-            var id = this.lastID;
-            db.run('INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)', [
-                id,
-                'https://www.facebook.com',
-                profile.id
-            ], function(err) {
-                if (err) { return cb(err); }
-                var user = {
-                id: id.toString(),
-                name: profile.displayName
-                };
-                return cb(null, user);
-            });
-            });
-        } else {
-            // The Facebook account has previously logged in to the app.  Get the
-            // user record linked to the Facebook account and log the user in.
-            db.get('SELECT * FROM users WHERE id = ?', [ cred.user_id ], function(err, user) {
-            if (err) { return cb(err); }
-            if (!user) { return cb(null, false); }
-            return cb(null, user);
-            });
-        }
-        };
-        */
+	    let user = repository.getUserFromFacebook(profile.id) 
+	    if (user) {
+		console.log("user already existed")
+		
+	    } else {
+		console.log("create a new user")
+		user = repository.createUserFromFacebook(profile.id)
+	    }
+	    console.log(user)
+	    cb(null, user)
     }
     ))
     
 }
+
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.username, name: user.name })
+  })
+})
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user)
+  })
+})
 
 module.exports = enableFacebook
