@@ -1,6 +1,6 @@
 
 let nextId = 0
-const tickets = []
+let tickets = []
 
 function getTickets(query) {
     if (query === undefined) {
@@ -22,6 +22,12 @@ function createTicket(ticket) {
     tickets.push(ticket)
 }
 
+function updateTicket(id, ticket) {
+    const oldTicket = tickets.filter(t => t.id == id)[0]
+    oldTicket.title = ticket.title
+    oldTicket.description = ticket.description
+}
+
 function getTicket(id) {
     return tickets.filter(e => e.id == id)[0]
 }
@@ -30,4 +36,4 @@ function deleteTicket(id) {
     tickets = tickets.filter(e => e.id != id)
 }
 
-module.exports = {getTickets, createTicket, getTicket, deleteTicket}
+module.exports = {getTickets, createTicket, getTicket, deleteTicket, updateTicket}
